@@ -2,8 +2,6 @@
 
 import pandas as pd
 pd.options.display.float_format = '{:,.2f}'.format
-import sys
-sys.path.insert(0, r'..\1_Apuracao')
 from _parametros import WorkFolder
     
 #Confere dataset backup

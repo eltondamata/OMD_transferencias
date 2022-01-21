@@ -1,4 +1,6 @@
 WorkFolder = 'Q:/OMD'
+ArquivoExcel = 'Pctes Suprimentos.xlsx'
+SheetName = 'pctessuprimentos'
 ANOOCD = 2022
 CODCNOOCD = ['POP']
 MESOCD = ['Jan']

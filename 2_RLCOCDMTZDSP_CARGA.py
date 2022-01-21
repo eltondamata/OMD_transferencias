@@ -2,10 +2,10 @@
 
 import pandas as pd
 pd.options.display.float_format = '{:,.2f}'.format
-from _parametros import WorkFolder, ANOOCD, CODCNOOCD, MESOCD
+from _parametros import WorkFolder, ANOOCD, CODCNOOCD, MESOCD, ArquivoExcel, SheetName
 
 ['pacote', 'DESC.CONTA', 'CONTA', 'ENTIDADE', 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
-df=pd.read_excel(WorkFolder + '/Pctes Suprimentos.xlsx', 'pctessuprimentos', usecols = "A,C:P")
+df=pd.read_excel(WorkFolder + '/' + ArquivoExcel, SheetName, usecols = "A,C:P")
 
 df = pd.melt(df, id_vars=['pacote', 'CONTA', 'ENTIDADE'], #variaveis continuam nas colunas
   value_vars=['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'], #colunas transpostas para linhas
