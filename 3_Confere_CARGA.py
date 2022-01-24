@@ -29,25 +29,25 @@ dfcarga.rename(columns={'VLRMOVCTB':'VALOR_CARGA'}, inplace=True)
 
 confere1 = dfcarga.groupby(['CODCNOOCD', 'NUMANOMES', 'DESPCTOCD'])[['VALOR_CARGA']].sum().reset_index()
 confere2 = df.groupby(['CODCNOOCD', 'NUMANOMES', 'DESPCTOCD'])[['VALOR_ATUAL']].sum().reset_index()
-confere = pd.merge(confere1, confere2, how='left')
-confere.eval('VARIACAO=VALOR_CARGA-VALOR_ATUAL', inplace=True)
+conferecarga = pd.merge(confere1, confere2, how='left')
+conferecarga.eval('VARIACAO=VALOR_CARGA-VALOR_ATUAL', inplace=True)
 
-print('==> TRANSFERENCIAS -- PACOTES')
-confere_pacote = confere.groupby(['CODCNOOCD', 'DESPCTOCD'])[['VALOR_ATUAL', 'VALOR_CARGA', 'VARIACAO']].sum().reset_index()
-print(confere_pacote.to_markdown(index=False, tablefmt='github', floatfmt=',.2f', numalign='right'), '\n')
-
-print('==> TRANSFERENCIAS -- MENSAL')
-confere_mes = confere.groupby(['CODCNOOCD', 'NUMANOMES'])[['VALOR_ATUAL', 'VALOR_CARGA', 'VARIACAO']].sum().reset_index()
-print(confere_mes.to_markdown(index=False, tablefmt='github', floatfmt=',.2f', numalign='right'), '\n')
-
-print('==> TOTAL OMD -- PACOTES')
+print('==> DADOS ATUAIS NA TABELA DWH -- PACOTES')
 confere = df.groupby(['DESPCTOCD', 'CODCNOOCD'])[['VALOR_ATUAL']].sum().unstack()
 confere.loc['TOTAL'] = confere.sum(axis=0, numeric_only=True)
 confere = confere.reset_index()
 print(confere.to_markdown(index=False, tablefmt='github', floatfmt=',.2f', numalign='right'), '\n')
 
-print('==> TOTAL OMD -- MENSAL')
+print('==> DADOS ATUAIS NA TABELA DWH -- MENSAL')
 confere = df.groupby(['NUMANOMES', 'CODCNOOCD'])[['VALOR_ATUAL']].sum().unstack()
 confere.loc['TOTAL'] = confere.sum(axis=0, numeric_only=True)
 confere = confere.reset_index()
 print(confere.to_markdown(index=False, tablefmt='github', floatfmt=',.2f', numalign='right'), '\n')
+
+print('==> CONFERE CARGA por PACOTE')
+confere_pacote = conferecarga.groupby(['CODCNOOCD', 'DESPCTOCD'])[['VALOR_ATUAL', 'VALOR_CARGA', 'VARIACAO']].sum().reset_index()
+print(confere_pacote.to_markdown(index=False, tablefmt='github', floatfmt=',.2f', numalign='right'), '\n')
+
+print('==> CONFERE CARGA por MES')
+confere_mes = conferecarga.groupby(['CODCNOOCD', 'NUMANOMES'])[['VALOR_ATUAL', 'VALOR_CARGA', 'VARIACAO']].sum().reset_index()
+print(confere_mes.to_markdown(index=False, tablefmt='github', floatfmt=',.2f', numalign='right'), '\n')
