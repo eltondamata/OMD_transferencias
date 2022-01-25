@@ -39,8 +39,9 @@ meses += (0,)
 #DELETA OS REGISTROS DA TABELA DWH filtrando (cenarios, meses, pacotes e diretorias) que estao na base de carga
 print('DELETE TABLE: DWH.RLCOCDMTZDSP')
 print('  CENARIOS:', cenarios)
-print('  PACOTES:', pacotes)
 print('  MESES:', meses)
+print('  PACOTES:', pacotes)
+print('  DIRETORIAS:', diretorias)
 cursor = conn.cursor()
 sqldel = (f"""DELETE t1 
               FROM DWH.RLCOCDMTZDSP t1 INNER JOIN 
@@ -56,7 +57,7 @@ cursor.execute(sqldel)
 conn.commit()
 cursor.close()
 conn.close()
-print('registros excluidos com sucesso! Backup dos registros excluidos:', WorkFolder + '/Datasets/RLCOCDMTZDSP_DELETADOS.ft', '\n')
+print('registros excluidos com sucesso!', '\n')
 
 #Campos da tabela de carga (DWH.RLCOCDMTZDSP)
 tipo_dados = {"NUMANOMES": Integer,
