@@ -43,15 +43,16 @@ print('  MESES:', meses)
 print('  PACOTES:', pacotes)
 print('  DIRETORIAS:', diretorias)
 cursor = conn.cursor()
-sqldel = (f"""DELETE t1 
-              FROM DWH.RLCOCDMTZDSP t1 INNER JOIN 
-                   DWH.DIMEDEOCDATU ede ON t1.CODEDEOCD = ede.CODEDEOCDATU INNER JOIN 
-                   DWH.EGIRLCPCTOCD pct ON t1.CODCNTCTB = pct.CODCNTCTB
-             WHERE pct.CODGRPLIVCTB = 462
-               AND t1.CODCNOOCD in {cenarios}  
-               AND t1.NUMANOMES in {meses}
-               AND pct.CODPCTOCD in {pacotes}
-               AND ede.CODDRTORZATU in {diretorias}
+sqldel = (f"""DELETE FROM DWH.RLCOCDMTZDSP t1 
+               WHERE EXISTS (SELECT ede.CODEDEOCDATU AS CODEDEOCD, pct.CODCNTCTB
+                               FROM DWH.DIMEDEOCDATU ede, DWH.EGIRLCPCTOCD pct
+                              WHERE t1.CODEDEOCD = ede.CODEDEOCDATU
+                                AND t1.CODCNTCTB = pct.CODCNTCTB
+                                AND pct.CODGRPLIVCTB = 462
+                                AND t1.CODCNOOCD in {cenarios} 
+                                AND t1.NUMANOMES in {meses}
+                                AND pct.CODPCTOCD in {pacotes}
+                                AND ede.CODDRTORZATU in {diretorias}) 
            """)
 cursor.execute(sqldel)
 conn.commit()
