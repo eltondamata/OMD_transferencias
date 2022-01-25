@@ -1,4 +1,7 @@
 #elton.mata@martins.com.br
+'''
+Confere os valores por Pacote, Diretoria e Mes da tabela de carga do OMD (dwh.RLCOCDMTZDSP)
+'''
 
 #Importa as Bibliotecas
 import pandas as pd

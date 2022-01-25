@@ -1,4 +1,8 @@
-#Atualiza tabela DWH.RLCOCDMTZDSP
+#elton.mata@martins.com.br
+'''
+Exclui os registros do DWH (Tabela RLCOCDMTZDSP) filtrando (cenarios, meses, pacotes e diretorias) que estao na base de carga (RLCOCDMTZDSP_CARGA.ft) 
+e carrega os registros da base de carga
+'''
 
 import pandas as pd
 from _parametros import WorkFolder
@@ -26,7 +30,7 @@ dfcarga = pd.merge(dfcarga, dimedeocd, how='left', on='CODEDEOCD')
 diretorias = tuple(dfcarga['CODDRTORZATU'].unique()) #seleciona as diretorias que estao na base de carga
 diretorias += (0,)
 
-#seleciona os cenarios e os meses que est„o na base de carga
+#seleciona os cenarios e os meses que est√£o na base de carga
 cenarios = tuple(dfcarga['CODCNOOCD'].unique())
 cenarios += ('NA',)
 meses = tuple(dfcarga['NUMANOMES'].unique())

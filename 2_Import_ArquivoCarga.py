@@ -1,4 +1,9 @@
 #elton.mata@martins.com.br
+'''
+Importa o arquivo excel com valor OMD por conta, entidade, mes.
+Compara com os valores atuais que estao na tabela de carga (DWH.RLCOCDMTZDSP)
+Exporta dataset com os dados no formato de carga da tabela DWH
+'''
 
 import pandas as pd
 pd.options.display.float_format = '{:,.2f}'.format

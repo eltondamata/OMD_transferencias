@@ -1,4 +1,7 @@
 #elton.mata@martins.com.br
+'''
+Confere os valores por Pacote, Diretoria e Mes da tabela de backup do OMD (bkp.RLCOCDMTZDSP)
+'''
 
 #Importa as Bibliotecas
 import pandas as pd
@@ -9,7 +12,7 @@ sys.path.insert(0, r'C:\oracle\dwh')
 from OracleDWH import conn
 
 #Dados base de backup
-df=pd.read_feather(WorkFolder + '/Datasets/RLCOCDMTZDSP_bkp_20220120.ft')
+df=pd.read_feather(WorkFolder + '/Datasets/bkp.RLCOCDMTZDSP_20220120.ft')
 
 #Relacao Pacote x Conta
 mysql = (""" SELECT CODGRPLIVCTB, CODCNTCTB, CODPCTOCD, DATATURGT FROM DWH.EGIRLCPCTOCD WHERE CODGRPLIVCTB = 462 """)
