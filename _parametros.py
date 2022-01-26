@@ -1,4 +1,6 @@
 WorkFolder = 'Q:/OMD'
+livrocontabil = 36 #Atacado
+#livrocontabil = 26 #SIMTECH
 ArquivoExcel = 'Pctes Suprimentos.xlsx', 'pctessuprimentos' #NomeArquivo.xlsx, Sheet_Name
 #ArquivoExcel = 'Pcte Depreciacao.xlsx', 'Pcte depreciaçao' #NomeArquivo.xlsx, Sheet_Name
 #ArquivoExcel = 'Pctes Vendas.xlsx', 'pctes vendas' #NomeArquivo.xlsx, Sheet_Name

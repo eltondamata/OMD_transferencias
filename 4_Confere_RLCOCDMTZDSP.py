@@ -12,12 +12,13 @@ sys.path.insert(0, r'C:\oracle\dwh')
 from OracleDWH import conn
 
 #importa arquivo de backup
-df = pd.read_feather(WorkFolder + '/Datasets/bkp.RLCOCDMTZDSP_20220120.ft')
-df.rename(columns={'VLRMOVCTB':'VLRBKP'}, inplace=True)
+dfbkp = pd.read_feather(WorkFolder + '/Datasets/bkp.RLCOCDMTZDSP_20220120.ft')
+dfbkp.rename(columns={'VLRMOVCTB':'VLRBKP'}, inplace=True)
 
 #Unifica base backup com base atual DWH
-df = pd.merge(pd.read_sql('SELECT * from dwh.RLCOCDMTZDSP', con=conn), df, how='outer').fillna(0)
-df.rename(columns={'VLRMOVCTB':'VLRATU'}, inplace=True)
+dfatu = pd.read_sql('SELECT * from dwh.RLCOCDMTZDSP', con=conn)
+dfatu.rename(columns={'VLRMOVCTB':'VLRATU'}, inplace=True)
+df = pd.merge(dfatu, dfbkp, how='outer').fillna(0)
 
 #Relacao Pacote x Conta
 mysql = (""" SELECT CODGRPLIVCTB, CODCNTCTB, CODPCTOCD, DATATURGT FROM DWH.EGIRLCPCTOCD WHERE CODGRPLIVCTB = 462 """)
@@ -38,34 +39,32 @@ conn.close()
 #Concatena codigo com descricao pacote e diretoria
 df['PACOTE'] = list((''.join([x.zfill(3), '.', y])) for x, y in zip(df['CODPCTOCD'].astype(str),df['DESPCTOCD']))
 df['DIRETORIA'] = list((''.join([x.zfill(3), '.', y])) for x, y in zip(df['CODDRTORZATU'].astype(str),df['DESDRTORZATU']))
-df.drop(columns=['CODPCTOCD', 'DESPCTOCD', 'CODDRTORZATU', 'DESDRTORZATU'], inplace=True)
+#df.drop(columns=['CODPCTOCD', 'DESPCTOCD', 'CODDRTORZATU', 'DESDRTORZATU'], inplace=True)
 
 #==> CONFERENCIA TABELA DWH VERSUS BACKUP
-cenarios = list(df['CODCNOOCD'].unique())
-for i in range(len(cenarios)):
-    print('='*100, '\n')
-    #Conferencia alterações por PACOTE
-    print('==> ALTERACOES POR PACOTE ( CENARIO =', cenarios[i], ')')
-    confere = df.query(f'CODCNOOCD==CODCNOOCD[{i}]').groupby(['PACOTE'])[['VLRATU', 'VLRBKP']].sum()
-    confere.eval('VARIACAO=VLRBKP-VLRATU', inplace=True)
-    confere.loc['TOTAL'] = confere.sum(axis=0, numeric_only=True)
-    confere = confere.reset_index()
-    print(confere.to_markdown(index=False, tablefmt='github', floatfmt=',.2f', numalign='right'), '\n')
-    
-    #Conferencia alterações por DIRETORIA
-    print('==> ALTERACOES POR DIRETORIA ( CENARIO =', cenarios[i], ')')
-    confere = df.query(f'CODCNOOCD==CODCNOOCD[{i}]').groupby(['DIRETORIA'])[['VLRATU', 'VLRBKP']].sum()
-    confere.eval('VARIACAO=VLRBKP-VLRATU', inplace=True)
-    confere.loc['TOTAL'] = confere.sum(axis=0, numeric_only=True)
-    confere = confere.reset_index()
-    print(confere.to_markdown(index=False, tablefmt='github', floatfmt=',.2f', numalign='right'), '\n')
-    
-    #Conferencia alterações por MES
-    print('==> ALTERACOES POR MES ( CENARIO =', cenarios[i], ')')
-    confere = df.query(f'CODCNOOCD==CODCNOOCD[{i}]').groupby(['NUMANOMES'])[['VLRATU', 'VLRBKP']].sum()
-    confere.eval('VARIACAO=VLRBKP-VLRATU', inplace=True)
-    confere.loc['TOTAL'] = confere.sum(axis=0, numeric_only=True)
-    confere = confere.reset_index()
-    print(confere.to_markdown(index=False, tablefmt='github', floatfmt=',.2f', numalign='right'), '\n')
-    print('\n')
-    
+#Conferencia alterações por PACOTE
+print('==> ALTERACOES POR PACOTE')
+confere = df.groupby(['PACOTE', 'CODCNOOCD'])[['VLRATU', 'VLRBKP']].sum()
+confere.eval('VARIACAO=VLRBKP-VLRATU', inplace=True)
+confere = confere.unstack()
+confere.loc['TOTAL'] = confere.sum(axis=0, numeric_only=True)
+confere = confere.reset_index()
+print(confere.to_markdown(index=False, tablefmt='github', floatfmt=',.2f', numalign='right'), '\n')
+
+#Conferencia alterações por DIRETORIA
+print('==> ALTERACOES POR DIRETORIA')
+confere = df.groupby(['DIRETORIA', 'CODCNOOCD'])[['VLRATU', 'VLRBKP']].sum()
+confere.eval('VARIACAO=VLRBKP-VLRATU', inplace=True)
+confere = confere.unstack()
+confere.loc['TOTAL'] = confere.sum(axis=0, numeric_only=True)
+confere = confere.reset_index()
+print(confere.to_markdown(index=False, tablefmt='github', floatfmt=',.2f', numalign='right'), '\n')
+
+#Conferencia alterações por MES
+print('==> ALTERACOES POR MES')
+confere = df.groupby(['NUMANOMES', 'CODCNOOCD'])[['VLRATU', 'VLRBKP']].sum()
+confere.eval('VARIACAO=VLRBKP-VLRATU', inplace=True)
+confere = confere.unstack()
+confere.loc['TOTAL'] = confere.sum(axis=0, numeric_only=True)
+confere = confere.reset_index()
+print(confere.to_markdown(index=False, tablefmt='github', floatfmt=',.2f', numalign='right'), '\n')

@@ -7,7 +7,7 @@ Exporta dataset com os dados no formato de carga da tabela DWH
 
 import pandas as pd
 pd.options.display.float_format = '{:,.2f}'.format
-from _parametros import WorkFolder, ANOMES, CODCNOOCD, ArquivoExcel
+from _parametros import WorkFolder, ANOMES, CODCNOOCD, ArquivoExcel, livrocontabil
 import sys
 sys.path.insert(0, r'C:\oracle\dwh')
 from OracleDWH import conn
@@ -30,7 +30,7 @@ df = pd.merge(df, dfcno, how='cross')
 
 #inclui parametros fixos na base de carga
 df['TIPAPRCTB'] = 3
-df['CODGRPLIVCTB'] = 36
+df['CODGRPLIVCTB'] = livrocontabil
 df['CODUNDNGCCTB'] = 1
 df['INDVGRCNOOCD'] = 1
 df = df[['pacote', 'NUMANOMES', 'CODCNOOCD', 'CODEDEOCD', 'TIPAPRCTB', 'CODGRPLIVCTB', 'CODCNTCTB', 'CODUNDNGCCTB', 'INDVGRCNOOCD', 'VLRMOVCTB']]
@@ -72,6 +72,7 @@ mysql = (f"""
                    DWH.DIMEDEOCDATU ede ON t1.CODEDEOCD = ede.CODEDEOCDATU INNER JOIN 
                    DWH.EGIRLCPCTOCD pct ON t1.CODCNTCTB = pct.CODCNTCTB
              WHERE pct.CODGRPLIVCTB = 462
+               AND t1.CODGRPLIVCTB = {livrocontabil}
                AND t1.CODCNOOCD in {cenarios}  
                AND t1.NUMANOMES in {meses}
                AND pct.CODPCTOCD in {pacotes}

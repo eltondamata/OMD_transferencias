@@ -31,6 +31,7 @@ diretorias = tuple(dfcarga['CODDRTORZATU'].unique()) #seleciona as diretorias qu
 diretorias += (0,)
 
 #seleciona os cenarios e os meses que estão na base de carga
+livrocontabil = dfcarga['CODGRPLIVCTB'].unique().item()
 cenarios = tuple(dfcarga['CODCNOOCD'].unique())
 cenarios += ('NA',)
 meses = tuple(dfcarga['NUMANOMES'].unique())
@@ -49,6 +50,7 @@ sqldel = (f"""DELETE FROM DWH.RLCOCDMTZDSP t1
                               WHERE t1.CODEDEOCD = ede.CODEDEOCDATU
                                 AND t1.CODCNTCTB = pct.CODCNTCTB
                                 AND pct.CODGRPLIVCTB = 462
+                                AND t1.CODGRPLIVCTB = {livrocontabil}
                                 AND t1.CODCNOOCD in {cenarios} 
                                 AND t1.NUMANOMES in {meses}
                                 AND pct.CODPCTOCD in {pacotes}
