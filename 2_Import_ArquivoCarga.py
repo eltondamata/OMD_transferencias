@@ -31,7 +31,12 @@ df = pd.merge(df, dfcno, how='cross')
 #inclui parametros fixos na base de carga
 df['TIPAPRCTB'] = 3
 df['CODGRPLIVCTB'] = livrocontabil
-df['CODUNDNGCCTB'] = 1
+
+if livrocontabil == 26:
+    df['CODUNDNGCCTB'] = 29
+else:
+    df['CODUNDNGCCTB'] = 1
+        
 df['INDVGRCNOOCD'] = 1
 df = df[['pacote', 'NUMANOMES', 'CODCNOOCD', 'CODEDEOCD', 'TIPAPRCTB', 'CODGRPLIVCTB', 'CODCNTCTB', 'CODUNDNGCCTB', 'INDVGRCNOOCD', 'VLRMOVCTB']]
 
