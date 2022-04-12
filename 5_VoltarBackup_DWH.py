@@ -13,7 +13,7 @@ import time
 start = time.strftime("%b %d %Y %H:%M:%S")
 
 #importa a base de carga
-dfcarga = pd.read_feather(WorkFolder + '/Datasets/bkp.RLCOCDMTZDSP_20220120.ft')
+dfcarga = pd.read_feather(WorkFolder + '/Datasets/bkp.RLCOCDMTZDSP_20220308.ft')
 
 #seleciona os cenarios e os meses que estão na base de carga
 cenarios = tuple(dfcarga['CODCNOOCD'].unique())

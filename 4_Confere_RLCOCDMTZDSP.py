@@ -12,7 +12,7 @@ sys.path.insert(0, r'C:\oracle\dwh')
 from OracleDWH import conn
 
 #importa arquivo de backup
-dfbkp = pd.read_feather(WorkFolder + '/Datasets/bkp.RLCOCDMTZDSP_20220120.ft')
+dfbkp = pd.read_feather(WorkFolder + '/Datasets/bkp.RLCOCDMTZDSP_20220406.ft')
 dfbkp.rename(columns={'VLRMOVCTB':'VLRBKP'}, inplace=True)
 
 #Unifica base backup com base atual DWH
